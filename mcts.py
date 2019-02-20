@@ -44,16 +44,11 @@ class MCTS:
         while i < 1000:
             # tree.root is an MCNode with the root_state
             selected_node = self.selection(self.root)
-            #print(terminal_node, "was selected")
             winner = self.simulation(selected_node)
-            #print("Winner of the simulation was", winner)
             self.backpropagation(selected_node, winner)
             i += 1
 
         # get the best child, and return the move that was used to get to that child
-        print("Children:", len(self.root.children))
-        # for c in self.root.children:
-        #         print("Move:", c.prev_move, "Wins:", c.wins, "Visits:", c.visits)
         return self.root.get_best_move()
 
     '''
@@ -68,13 +63,10 @@ class MCTS:
 
             # there are still remaining options, so not fully expanded
             if curr.possible_options:
-                #print("Node needs to be expanded")
                 return self.expansion(curr)
             # else, no more possible options so fully expanded, choose the best child
             else:
-                #print("No expansion, use best child")
                 curr = self.best_child(curr)
-                #print("Selected", curr.prev_move, "as best child")
         # this node will be used for the rollout
         return curr
 
@@ -92,7 +84,6 @@ class MCTS:
 
         # options[0] is a (r,c) pair
         new_piece = node.possible_options.pop()
-        #print("Expanding with", new_piece)
         r = new_piece[0]
         c = new_piece[1]
 
@@ -133,12 +124,21 @@ class MCTS:
 
         return new_child
 
+    '''
+    Determines which child is the best based on the UCB equation. This child is
+    returned and used for the simulation
+    '''
     def best_child(self, node):
         if not node.children:
             print("There are no children, cannot get best_child")
             return None
         return node.max_UCB()
 
+    '''
+    Takes a node containing a state and performs a rollout starting at that
+    state until a terminal state is reached (a winner is found or game ends
+    in a draw)
+    '''
     def simulation(self, node):
         if node.terminal:
             return node.winner
@@ -159,6 +159,10 @@ class MCTS:
                 winner = 'w'
             return winner
 
+    '''
+    Takes a node and begins to propagate values all the way back up to the root,
+    updating the proper intermediate values for visits and wins.
+    '''
     def backpropagation(self, node, result):
         curr = node
         winner = result
