@@ -54,20 +54,34 @@ class Board:
             self.check_win(r, c)
         if not self.game_over:
             #TODO: Modify player2 to use MCTS instead of Randplay
-            player2 = Randplay(self.grid, self.piece)
-            r,c = player2.make_move()
-            print("Auto", self.piece, "move: (", r, ",", c, ")")
+            # player2 = Randplay(self.grid, self.piece)
+            # r,c = player2.make_move()
+            # print("Auto", self.piece, "move: (", r, ",", c, ")")
+            # self.set_piece(r, c)
+            # self.check_win(r, c)
+
+            # player2 is a player using MCTS
+            player2 = MCTS(self.grid, self.piece)
+            r,c = player2.uct_search()
+            print("AI", self.piece, "move: (", r, ",", c, ")")
             self.set_piece(r, c)
             self.check_win(r, c)
     #Human vs computer
     def semi_autoplay(self):
         if not self.game_over:
         #Optional: Change this to MCTS AI and see whether you can win
-            player1 = Randplay(self.grid, self.piece)
-            r,c = player1.make_move()
-            print("Semi-Auto", self.piece, "move: (", r, ",", c, ")")
+            # player1 = Randplay(self.grid, self.piece)
+            # r,c = player1.make_move()
+            # print("Semi-Auto", self.piece, "move: (", r, ",", c, ")")
+            # self.set_piece(r, c)
+            # self.check_win(r, c)
+
+            # player1 is a player using MCTS
+            player1 = MCTS(self.grid, self.piece)
+            r,c = player1.uct_search()
+            print("AI", self.piece, "move: (", r, ",", c, ")")
             self.set_piece(r, c)
-            self.check_win(r, c)   
+            self.check_win(r, c)
     #there are eight direction to check, (row, column)
     def check_win(self, r, c):
         #north direction (up)
@@ -142,11 +156,11 @@ class Board:
                           (self.grid_count - 1) * self.grid_size + self.edge_size * 2, (self.grid_count - 1) * self.grid_size + self.edge_size * 2], 0)
         #draw horizontal line
         for r in range(self.grid_count):
-            y = self.start_y + r * self.grid_size 
+            y = self.start_y + r * self.grid_size
             pygame.draw.line(screen, (0, 0, 0), [self.start_x, y], [self.start_x + self.grid_size * (self.grid_count - 1), y], 2)
         #draw vertical line
         for c in range(self.grid_count):
-            x = self.start_x + c * self.grid_size 
+            x = self.start_x + c * self.grid_size
             pygame.draw.line(screen, (0, 0, 0), [x, self.start_y], [x, self.start_y + self.grid_size * (self.grid_count - 1)], 2)
         #draw pieces
         for r in range(self.grid_count):

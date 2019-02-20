@@ -40,7 +40,11 @@ class Randplay:
             self.winner = 'w'
         return options
     def make_move(self):
-        return random.choice(self.get_options(self.grid))
+        o = self.get_options(self.grid)
+        if not o:
+            print("error options empty.")
+            return -1, -1
+        return random.choice(o)
     def check_win(self, r, c):
         n_count = self.get_continuous_count(r, c, -1, 0)
         s_count = self.get_continuous_count(r, c, 1, 0)
